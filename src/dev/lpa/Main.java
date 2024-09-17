@@ -19,8 +19,10 @@ public class Main {
         System.out.print(". ");
         try {
           Thread.sleep(500);
+          System.out.println("A. State = " + Thread.currentThread().getState());
         } catch (InterruptedException e) {
           System.out.println("\nWhoops!! " + tname + " interrupted.");
+          System.out.println("A1. State = " + Thread.currentThread().getState());
           return;
         }
       }
