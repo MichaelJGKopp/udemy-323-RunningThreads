@@ -21,6 +21,7 @@ public class Main {
           Thread.sleep(500);
         } catch (InterruptedException e) {
           System.out.println("\nWhoops!! " + tname + " interrupted.");
+          Thread.currentThread().interrupt(); // reassert exception, since can't deal with it
           return;
         }
       }
@@ -31,7 +32,7 @@ public class Main {
       try {
         for (int i = 0; i < 3; i++) {
           Thread.sleep(250);
-          System.out.println("Installation Step " + (i+1) + " is completed.");
+          System.out.println("Installation Step " + (i + 1) + " is completed.");
         }
       } catch (InterruptedException e) {
         e.printStackTrace();
@@ -45,7 +46,7 @@ public class Main {
         try {
           Thread.sleep(1000);
 
-          if(System.currentTimeMillis() - now > 2000) {
+          if(System.currentTimeMillis() - now > 8000) { // change to 8000 to not interrupt
             thread.interrupt();
           }
         } catch (InterruptedException e) {
@@ -64,7 +65,7 @@ public class Main {
       e.printStackTrace();
     }
 
-    if (!thread.isInterrupted()) {
+    if (!thread.isInterrupted()) { // failed
       installThread.start();
     } else {
       System.out.println("Previous thread was interrupted, " +
