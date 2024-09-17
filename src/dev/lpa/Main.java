@@ -19,34 +19,53 @@ public class Main {
         System.out.print(". ");
         try {
           Thread.sleep(500);
-          System.out.println("A. State = " + Thread.currentThread().getState());
         } catch (InterruptedException e) {
           System.out.println("\nWhoops!! " + tname + " interrupted.");
-          System.out.println("A1. State = " + Thread.currentThread().getState());
           return;
         }
       }
       System.out.println("\n" + tname + " completed.");
     });
 
-    System.out.println(thread.getName() + " starting");
-    thread.start();
-
-    long now = System.currentTimeMillis();
-    while (thread.isAlive()) {
-      System.out.println("\nwaiting for thread to complete");
+    Thread installThread = new Thread(() -> {
       try {
-        Thread.sleep(1000);
-        System.out.println("B. State = " + thread.getState());
-
-        if(System.currentTimeMillis() - now > 2000) {
-          thread.interrupt();
+        for (int i = 0; i < 3; i++) {
+          Thread.sleep(250);
+          System.out.println("Installation Step " + (i+1) + " is completed.");
         }
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
+    }, "InstallThread");
+
+    System.out.println(thread.getName() + " starting");
+    thread.start();
+
+    long now = System.currentTimeMillis();
+//    while (thread.isAlive()) {
+//      System.out.println("\nwaiting for thread to complete");
+//      try {
+//        Thread.sleep(1000);
+//
+//        if(System.currentTimeMillis() - now > 2000) {
+//          thread.interrupt();
+//        }
+//      } catch (InterruptedException e) {
+//        e.printStackTrace();
+//      }
+//    }
+
+    try {
+      thread.join();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
     }
 
-    System.out.println("C. State = " + thread.getState());
+    if (!thread.isInterrupted()) {
+      installThread.start();
+    } else {
+      System.out.println("Previous thread was interrupted, " +
+        installThread.getName() + " can't run.");
+    }
   }
 }
