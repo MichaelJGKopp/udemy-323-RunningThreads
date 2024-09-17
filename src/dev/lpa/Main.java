@@ -32,13 +32,21 @@ public class Main {
     System.out.println(thread.getName() + " starting");
     thread.start();
 
-    System.out.println("Main thread would continue here.");
+    long now = System.currentTimeMillis();
+    while (thread.isAlive()) {
+      System.out.println("\nwaiting for thread to complete");
+      try {
+        Thread.sleep(1000);
+        System.out.println("B. State = " + thread.getState());
 
-    try {
-      Thread.sleep(2000);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+        if(System.currentTimeMillis() - now > 2000) {
+          thread.interrupt();
+        }
+      } catch (InterruptedException e) {
+        e.printStackTrace();
+      }
     }
-    thread.interrupt();
+
+    System.out.println("C. State = " + thread.getState());
   }
 }
